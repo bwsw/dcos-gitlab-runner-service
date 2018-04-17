@@ -58,6 +58,8 @@ RUN apt-get update -y && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+RUN dpkg --configure -a && apt-get update -qq && apt-get install -y -qq pylint python3-pip
+
 # Add wrapper script
 ADD register_and_run.sh /
 
