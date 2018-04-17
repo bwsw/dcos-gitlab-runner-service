@@ -11,6 +11,10 @@ ENV GITLAB_RUNNER_VERSION=9.1.1
 
 ENV DOCKER_ENGINE_VERSION=17.05.0~ce-0~ubuntu-xenial
 
+ENV SCALA_VERSION 2.12.4
+ENV SBT_VERSION 1.1.1
+
+
 # Install components and do the preparations
 # 1. Install needed packages
 # 2. Install GitLab CI runner
@@ -36,6 +40,21 @@ RUN apt-get update -y && \
     apt-get install -y docker-engine=${DOCKER_ENGINE_VERSION} && \
     curl -sSL https://raw.githubusercontent.com/docker/docker/${DIND_COMMIT}/hack/dind -o /usr/local/bin/dind && \
     chmod a+x /usr/local/bin/dind && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install OpenJDK and SBT
+RUN apt-get update -y && \
+    apt-get -y install openjdk-8-jdk && \
+    curl -fsL https://downloads.typesafe.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.tgz | tar xfz - -C /root/ && \
+    echo >> /root/.bashrc && \
+    echo "export PATH=~/scala-$SCALA_VERSION/bin:$PATH" >> /root/.bashrc && \
+    curl -L -o sbt-$SBT_VERSION.deb https://dl.bintray.com/sbt/debian/sbt-$SBT_VERSION.deb && \
+    dpkg -i sbt-$SBT_VERSION.deb && \
+    rm sbt-$SBT_VERSION.deb && \
+    apt-get update && \
+    apt-get install -y sbt && \
+    sbt sbtVersion && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
