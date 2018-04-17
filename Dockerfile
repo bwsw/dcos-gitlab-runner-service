@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER TobiLG <tobilg@gmail.com>
+MAINTAINER bwsw <info@bitworks.software>
 
 # Download dumb-init
 ADD https://github.com/Yelp/dumb-init/releases/download/v1.0.2/dumb-init_1.0.2_amd64 /usr/bin/dumb-init
